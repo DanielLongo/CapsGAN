@@ -1,5 +1,3 @@
-Generative Adversarial Network that leverages CapsuleNetworks. <br />
-
 For information of Capsule Networks - https://arxiv.org/abs/1710.09829 <br />
 For information on GANs - https://arxiv.org/abs/1406.2661
 
