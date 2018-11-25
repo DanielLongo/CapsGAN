@@ -4,10 +4,10 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 
 class CapsDiscriminatorMNIST(nn.Module):
-	def __init__(self, input_size, routings):
+	def __init__(self, input_size, routings, classes):
 		super(CapsDiscriminatorMNIST, self).__init__()
 		self.input_size = input_size
-		self.classes = 1
+		self.classes = classes
 		self.routings = routings
 
 		self.conv1 = nn.Conv2d(input_size[0], 256, kernel_size=9, stride=1, padding=0)
@@ -15,10 +15,12 @@ class CapsDiscriminatorMNIST(nn.Module):
 		self.digitcaps = DenseCapsule(num_caps_in=32*6*6, num_dims_in=8,
 									  num_caps_out=classes, num_dims_out=16, routings=routings)
 
+		self.relu = nn.ReLU()
 	def forward(self, x, y=None):
 		out = self.relu(self.conv1(x))
 		out = self.primarycaps(out)
 		out = self.digitcaps(out)
+		# print("out", out.shape)
 		length = out.norm(dim=-1)
 		return length
 

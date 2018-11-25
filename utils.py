@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import torchvision.datasets
 from torchvision import transforms
+from mnist_classifier import Net
+
 plt.rcParams['image.cmap'] = 'gray'
 
 def save_images(generator, epoch, i, filename_prefix):
@@ -42,3 +44,19 @@ def get_mnist_data(batch_size=64):
 	mnist_test = torchvision.datasets.MNIST('./MNIST_data', train=False, download=True, transform=transform)
 	test_loader = torch.utils.data.DataLoader(mnist_test, batch_size=batch_size,  shuffle=True)
 	return train_loader, test_loader
+
+def get_batch_of_images(generator, n, batch_size=16):
+	batches = []
+	if next(generator.parameters()).is_cuda:
+		dtype = torch.cuda.FloatTensor
+	else:
+		dtype = torch.FloatTensor
+	for i in range(n):
+		z = generate_noise(batch_size).type(dtype)
+		batches += [generator(z)]
+	return batches
+
+def get_mnist_classifer(filepath="./saved_models/mnist_classifer.pt"):
+	net = Net()
+	net.load_state_dict(torch.load(filepath))
+	return net

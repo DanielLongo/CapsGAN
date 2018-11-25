@@ -2,6 +2,7 @@ import torch
 from torch import nn
 from utils import save_images
 from utils import generate_noise
+from metrics import get_inception_score
 
 def create_optimizer(model, lr=.01, betas=None):
 	if betas == None:
@@ -52,5 +53,6 @@ def train_gan(generator, discriminator, image_loader, num_epochs, batch_size, cu
 		print("Epoch", epoch, "Iter", iters)
 		print("d_cost", d_cost)
 		print("g_cost", g_cost)
+		print("Inception Score", get_inception_score(generator))
 
 	return discriminator, generator
