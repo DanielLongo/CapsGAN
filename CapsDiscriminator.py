@@ -3,9 +3,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
-class CapsDiscriminator(nn.Module):
+class CapsDiscriminatorMNIST(nn.Module):
 	def __init__(self, input_size, routings):
-		super(CapsDiscriminator, self).__init__()
+		super(CapsDiscriminatorMNIST, self).__init__()
 		self.input_size = input_size
 		self.classes = 1
 		self.routings = routings

@@ -1,9 +1,9 @@
 import torch 
 from torch import nn
 
-class ConvDiscriminator(nn.Module):
+class ConvDiscriminatorMNIST(nn.Module):
 	def __init__(self):
-		super(ConvDiscriminator, self).__init__()
+		super(ConvDiscriminatorMNIST, self).__init__()
 		self.conv1 = nn.Sequential(
 			nn.Conv2d(1, 32, [5,5], stride=[1,1]),
 			nn.LeakyReLU(negative_slope=.01),
@@ -13,10 +13,10 @@ class ConvDiscriminator(nn.Module):
 			nn.LeakyReLU(negative_slope=.01),
 			nn.MaxPool2d([2,2], stride=[2,2]))
 		self.fc1 = nn.Sequential(
-			nn.Linear((64*5*5), (64*5*5)),
+			nn.Linear((64*4*4), (64*4*4)),
 			nn.LeakyReLU(negative_slope=.01))
 		self.fc2 = nn.Sequential(
-			nn.Linear((64*5*5), 1),
+			nn.Linear((64*4*4), 1),
 			nn.Sigmoid())
 
 
