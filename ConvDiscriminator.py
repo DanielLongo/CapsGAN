@@ -7,17 +7,21 @@ class ConvDiscriminatorMNIST(nn.Module):
 		self.conv1 = nn.Sequential(
 			nn.Conv2d(1, 32, [5,5], stride=[1,1]),
 			nn.LeakyReLU(negative_slope=.01),
-			nn.MaxPool2d([2,2], stride=[2,2]))
+			nn.MaxPool2d([2,2], stride=[2,2])
+		)
 		self.conv2 = nn.Sequential(
 			nn.Conv2d(32, 64, [5,5], stride=[1,1]),
 			nn.LeakyReLU(negative_slope=.01),
-			nn.MaxPool2d([2,2], stride=[2,2]))
+			nn.MaxPool2d([2,2], stride=[2,2])
+		)
 		self.fc1 = nn.Sequential(
 			nn.Linear((64*4*4), (64*4*4)),
-			nn.LeakyReLU(negative_slope=.01))
+			nn.LeakyReLU(negative_slope=.01)
+		)
 		self.fc2 = nn.Sequential(
 			nn.Linear((64*4*4), 1),
-			nn.Sigmoid())
+			nn.Sigmoid()
+		)
 
 
 	def forward(self, x):
