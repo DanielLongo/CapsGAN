@@ -14,11 +14,12 @@ train_data, test_data = get_mnist_data(batch_size=batch_size)
 G = ConvGeneratorMNIST()
 D = ConvDiscriminatorMNIST()
 
-train_gan(G,D, train_data, epochs, batch_size, save_gen_images=save_images, filename_prefix="ConvConv/train")
+# train_gan(G,D, train_data, epochs, batch_size, save_gen_images=save_images, filename_prefix="ConvConv/train")
 
 #CapsGAN -> G: Conv D: Caps
 G = ConvGeneratorMNIST()
-D = CapsDiscriminatorMNIST(input_size=[1, 28, 28], classes=1, routings=3) 
+# D = CapsDiscriminatorMNIST(input_size=[1, 28, 28], classes=1, routings=3)
+D = CapsDiscriminatorMNIST(input_size=[1, 28, 28], classes=1, routings=3, d=128, num_dims=4, num_maps=16)
 
 train_gan(G,D, train_data, epochs, batch_size, save_gen_images=save_images, filename_prefix="ConvCaps/train")
 print("score:", get_inception_score(G))

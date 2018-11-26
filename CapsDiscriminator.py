@@ -4,16 +4,19 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 
 class CapsDiscriminatorMNIST(nn.Module):
-	def __init__(self, input_size, routings, classes):
+	def __init__(self, input_size, routings, classes, d=256, num_dims=8, num_maps=32):
 		super(CapsDiscriminatorMNIST, self).__init__()
 		self.input_size = input_size
 		self.classes = classes
 		self.routings = routings
+		self.d = d #256
+		self.num_dims = num_dims
+		self.num_maps = num_maps
 
-		self.conv1 = nn.Conv2d(input_size[0], 256, kernel_size=9, stride=1, padding=0)
-		self.primarycaps = PrimaryCapsule()
-		self.digitcaps = DenseCapsule(num_caps_in=32*6*6, num_dims_in=8,
-									  num_caps_out=classes, num_dims_out=16, routings=routings)
+		self.conv1 = nn.Conv2d(input_size[0], self.d, kernel_size=9, stride=1, padding=0)
+		self.primarycaps = PrimaryCapsule(num_dims=self.num_dims, num_maps=self.num_maps, d=self.d)
+		self.digitcaps = DenseCapsule(num_caps_in=self.num_maps*6*6, num_dims_in=self.num_dims, ###8
+									  num_caps_out=classes, num_dims_out=self.num_dims*2, routings=routings) ##16
 
 		self.relu = nn.ReLU()
 	def forward(self, x, y=None):
@@ -31,12 +34,12 @@ def squash(inputs, axis=-1):
 
 
 class PrimaryCapsule(nn.Module):
-	def __init__(self, num_maps=32, num_dims=8):		
+	def __init__(self, num_maps=32, num_dims=4, d=256):		###8
 		super(PrimaryCapsule, self).__init__()
 		self.num_maps = num_maps
 		self.num_caps = 6 * 6 * self.num_maps
 		self.num_dims = num_dims
-		self.conv1 = nn.Conv2d(256, self.num_maps * self.num_dims, kernel_size=9, stride=2, padding=0)
+		self.conv1 = nn.Conv2d(d, self.num_maps * self.num_dims, kernel_size=9, stride=2, padding=0)
 
 	def forward(self, x):
 		# 20, 20, 256
