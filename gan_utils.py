@@ -27,12 +27,14 @@ def train_gan(generator, discriminator, image_loader, num_epochs, batch_size, cu
 		for x, _ in image_loader:
 			if x.shape[0] != batch_size:
 				continue
+				
 			real_data = x.type(dtype)
 
 			z = generate_noise(batch_size).type(dtype)
 			fake_images = generator(z)
 			g_result = discriminator(fake_images).squeeze()
-			g_cost = BCELoss(g_result, torch.ones(batch_size).type(dtype))
+			# g_cost = BCELoss(g_result, torch.ones(batch_size).type(dtype))
+			g_cost = torch.mean(g_result)
 			g_cost.backward()
 			g_optimizer.step()
 			g_optimizer.zero_grad()
@@ -44,7 +46,8 @@ def train_gan(generator, discriminator, image_loader, num_epochs, batch_size, cu
 			d_cost_fake = BCELoss(d_spred_fake, torch.zeros(batch_size).type(dtype))
 			d_spred_real = discriminator(real_data).squeeze()
 			d_cost_real = BCELoss(d_spred_real, torch.ones(batch_size).type(dtype))
-			d_cost = d_cost_real + d_cost_fake
+			# d_cost = d_cost_real + d_cost_fake
+			d_cost = 0-  torch.mean(d_spred_real - d_spred_fake)
 			d_cost.backward()
 			d_optimizer.step()
 			iters += 1
